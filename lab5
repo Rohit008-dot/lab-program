@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+#define SIZE 50
+
+int stack[SIZE];
+int top = -1;
+
+void push(int elem) {
+    if (top != SIZE - 1) {
+        stack[++top] = elem;
+    } else
+    {
+        printf("Stack Overflow\n");
+        exit(1);
+    }
+}
+
+int pop() {
+    if (top != -1) {
+        return stack[top--];
+    } else
+
+    {
+        printf("Stack Underflow\n");
+        exit(1);
+    }
+}
+
+int evaluateSuffix(char suffix[]) {
+    for (int i = 0; suffix[i] != '\0'; i++) {
+        char ch = suffix[i];
+        if (isdigit(ch)) {
+            push(ch - '0'); // Convert character to integer and push operand
+        } else {
+            int operand2 = pop();
+            int operand1 = pop();
+            int result;
+
+            switch (ch) {
+            case '+':
+                result = operand1 + operand2;
+                break;
+            case '-':
+                result = operand1 - operand2;
+                break;
+            case '*':
+                result = operand1 * operand2;
+                break;
+            case '/':
+                result = operand1 / operand2;
+                break;
+            case '%':
+                result = operand1 % operand2;
+                break;
+            default:
+                printf("Invalid operator\n");
+                exit(1);
+            }
+
+            push(result);
+        }
+    }
+
+    return pop();
+}
+
+int main() {
+    char suffixExpression[SIZE];
+
+    printf("Enter the suffix expression: ");
+    scanf("%s", suffixExpression);
+
+    int result = evaluateSuffix(suffixExpression);
+
+    printf("Result of the suffix expression: %d\n", result);
+
+    return 0;
+}
+
+/*
+output 1
+
+Enter the suffix expression: 23+4*
+Result of the suffix expression: 20
+
+output 2
+Enter the suffix expression: 342*7/+
+Result of the suffix expression: 4
+
+*/
