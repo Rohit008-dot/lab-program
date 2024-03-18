@@ -1,0 +1,175 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct NODE Node;
+
+struct NODE {
+    int value;
+    Node* left;
+    Node* right;
+};
+
+Node* root = NULL;
+
+Node* insert(Node* root, int value) {
+    if (root == NULL) {
+        Node* node = malloc(sizeof(Node));
+        node->value = value;
+        node->left = node->right = NULL;
+        return node;
+    }
+
+    if (value == root->value) {
+        printf(" Duplicate Element Not Allowed !!!");
+    }
+
+    if (value < root->value) {
+        root->left = insert(root->left, value);
+    }
+
+    if (value > root->value) {
+        root->right = insert(root->right, value);
+    }
+
+    return root;
+}
+
+Node* search(Node* root, int value) {
+    if (root == NULL) {
+        return NULL; /* Element is not found */
+    }
+
+    if (value == root->value) {
+        return root; /* Element Found */
+    }
+
+    if (value < root->value) {
+        return search(root->left, value); /* Search in the left sub tree. */
+    }
+
+    if (value > root->value) {
+        return search(root->right, value); /* Search in the right sub tree. */
+    }
+}
+
+void inorder(Node* root) {
+    if (root != NULL) {
+        inorder(root->left);
+        printf(" %d ", root->value);
+        inorder(root->right);
+    }
+}
+
+void preorder(Node* root) {
+    if (root != NULL) {
+        printf(" %d ", root->value);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+void postorder(Node* root) {
+    if (root != NULL) {
+        postorder(root->left);
+        postorder(root->right);
+        printf(" %d ", root->value);
+    }
+}
+
+void traverse() {
+    preorder(root);
+    printf(" Preorder\n");
+    inorder(root);
+    printf(" Inorder\n");
+    postorder(root);
+    printf(" Postorder\n");
+}
+
+void find() {
+    Node* node;
+    int value;
+    printf("Enter item: ");
+    scanf("%d", &value);
+    node = search(root, value);
+    node == NULL ? printf("Not found.\n") : printf("Found %d.\n", node->value);
+}
+
+void create() {
+    int n;
+    int value;
+    printf("BST for How Many Nodes? : ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter the value of node %d: ", i + 1);
+        scanf("%d", &value);
+        root = insert(root, value);
+    }
+
+    printf("BST created!!\n");
+}
+
+int main() {
+    int choice;
+
+    for (;;) {
+        printf(" 1 : Create \n 2 : Traverse \n 3 : Search \n 4 : exit \n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                create();
+                break;
+            case 2:
+                traverse();
+                break;
+            case 3:
+                find();
+                break;
+            case 4:
+                exit(0);
+        }
+    }
+
+    return 0;
+}
+
+
+/*
+ 1 : Create
+ 2 : Traverse
+ 3 : Search
+ 4 : exit
+Enter your choice: 1
+BST for How Many Nodes? : 5
+Enter the value of node 1: 44
+Enter the value of node 2: 77
+Enter the value of node 3: 22
+Enter the value of node 4: 33
+Enter the value of node 5: 11
+BST created!!
+ 1 : Create
+ 2 : Traverse
+ 3 : Search
+ 4 : exit
+Enter your choice: 2
+ 44  22  11  33  77  Preorder
+ 11  22  33  44  77  Inorder
+ 11  33  22  77  44  Postorder
+ 1 : Create
+ 2 : Traverse
+ 3 : Search
+ 4 : exit
+Enter your choice: 3
+Enter item: 44
+Found 44.
+ 1 : Create
+ 2 : Traverse
+ 3 : Search
+ 4 : exit
+Enter your choice: 3
+Enter item: 10
+Not found.
+
+*/
