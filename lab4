@@ -1,0 +1,74 @@
+#include <stdio.h>
+#define SIZE 50
+
+char s[SIZE];
+int top = -1;
+
+void push(char elem) {
+    s[++top] = elem;
+}
+
+char pop() {
+    return s[top--];
+}
+
+int precedence(char elem) {
+    switch (elem) {
+        case '(':
+            return 1;
+        case '+':
+        case '-':
+            return 2;
+        case '*':
+        case '/':
+            return 3;
+        case '^':
+            return 4;  // Removed '$' as it's not a valid operator
+        default:
+            return 0;
+    }
+}
+
+void convert(char infix[], char postfix[]) {
+    char ch;
+    int i = 0, j = 0;
+    for (i = 0; infix[i]; i++) {
+        ch = infix[i];
+        switch (ch) {
+            case '(':
+                push(ch);
+                break;
+            case ')':
+                while ((ch = pop()) != '(') {
+                    postfix[j++] = ch;
+                }
+                break;
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+            case '^':
+                while (top != -1 && precedence(s[top]) >= precedence(ch)) {
+                    postfix[j++] = pop();
+                }
+                push(ch);
+                break;
+            default:
+                postfix[j++] = ch;
+        }
+    }
+    while (top != -1) {
+        postfix[j++] = pop();
+    }
+    postfix[j] = '\0';  // Null terminate the string
+}
+
+int main() {
+    char infix[SIZE], postfix[SIZE];
+    printf("Enter the infix expression: ");
+    fgets(infix, SIZE, stdin);  // Read input using fgets
+    convert(infix, postfix);
+    printf("The postfix expression is: %s\n", postfix);
+
+    return 0;
+}
